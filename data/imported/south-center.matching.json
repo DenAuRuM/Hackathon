@@ -1,0 +1,398 @@
+{
+  "method": "Совпадение даты, окна, типов, района, адреса без квартиры, подключения и гигабита. Это кандидат соответствия, не доказанная идентичность.",
+  "links": [
+    {
+      "requestId": "south-center:32840",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305894566:row-2"
+      ]
+    },
+    {
+      "requestId": "south-center:78540",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305923871:row-3"
+      ]
+    },
+    {
+      "requestId": "south-center:66376",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305857442:row-4"
+      ]
+    },
+    {
+      "requestId": "south-center:23637",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305848096:row-5"
+      ]
+    },
+    {
+      "requestId": "south-center:97770",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305715188:row-6"
+      ]
+    },
+    {
+      "requestId": "south-center:55711",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305885689:row-7"
+      ]
+    },
+    {
+      "requestId": "south-center:76944",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305896115:row-8"
+      ]
+    },
+    {
+      "requestId": "south-center:75881",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305826867:row-9"
+      ]
+    },
+    {
+      "requestId": "south-center:85188",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305888827:row-10"
+      ]
+    },
+    {
+      "requestId": "south-center:19376",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305923588:row-11"
+      ]
+    },
+    {
+      "requestId": "south-center:6185",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305911433:row-12"
+      ]
+    },
+    {
+      "requestId": "south-center:80548",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305885500:row-13"
+      ]
+    },
+    {
+      "requestId": "south-center:76452",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305896271:row-14"
+      ]
+    },
+    {
+      "requestId": "south-center:47560",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305862599:row-15"
+      ]
+    },
+    {
+      "requestId": "south-center:79707",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305885170:row-16"
+      ]
+    },
+    {
+      "requestId": "south-center:23142",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305894946:row-17"
+      ]
+    },
+    {
+      "requestId": "south-center:10776",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305897647:row-18"
+      ]
+    },
+    {
+      "requestId": "south-center:94447",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305848336:row-19"
+      ]
+    },
+    {
+      "requestId": "south-center:94575",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305924398:row-20"
+      ]
+    },
+    {
+      "requestId": "south-center:94431",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305597759:row-21"
+      ]
+    },
+    {
+      "requestId": "south-center:52576",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305773274:row-22"
+      ]
+    },
+    {
+      "requestId": "south-center:66315",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305892707:row-23"
+      ]
+    },
+    {
+      "requestId": "south-center:93544",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305853788:row-24"
+      ]
+    },
+    {
+      "requestId": "south-center:19203",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305865903:row-25"
+      ]
+    },
+    {
+      "requestId": "south-center:16024",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305836042:row-26"
+      ]
+    },
+    {
+      "requestId": "south-center:90373",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305857303:row-27"
+      ]
+    },
+    {
+      "requestId": "south-center:79719",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305888542:row-28"
+      ]
+    },
+    {
+      "requestId": "south-center:6957",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305893538:row-29"
+      ]
+    },
+    {
+      "requestId": "south-center:78036",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305866081:row-30"
+      ]
+    },
+    {
+      "requestId": "south-center:49105",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305914018:row-31"
+      ]
+    },
+    {
+      "requestId": "south-center:27023",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305927115:row-32"
+      ]
+    },
+    {
+      "requestId": "south-center:26177",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305897880:row-33"
+      ]
+    },
+    {
+      "requestId": "south-center:77795",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305887153:row-34"
+      ]
+    },
+    {
+      "requestId": "south-center:24132",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305887469:row-35"
+      ]
+    },
+    {
+      "requestId": "south-center:99841",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305892304:row-36"
+      ]
+    },
+    {
+      "requestId": "south-center:20263",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305866266:row-37"
+      ]
+    },
+    {
+      "requestId": "south-center:51133",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305889051:row-38"
+      ]
+    },
+    {
+      "requestId": "south-center:90709",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305889406:row-39"
+      ]
+    },
+    {
+      "requestId": "south-center:84074",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305910621:row-40"
+      ]
+    },
+    {
+      "requestId": "south-center:12263",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305868762:row-41"
+      ]
+    },
+    {
+      "requestId": "south-center:95501",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305886206:row-42"
+      ]
+    },
+    {
+      "requestId": "south-center:86002",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305835850:row-43"
+      ]
+    },
+    {
+      "requestId": "south-center:92618",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305845228:row-44"
+      ]
+    },
+    {
+      "requestId": "south-center:26845",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305886379:row-45"
+      ]
+    },
+    {
+      "requestId": "south-center:80308",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305889212:row-46"
+      ]
+    },
+    {
+      "requestId": "south-center:93276",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305920660:row-47"
+      ]
+    },
+    {
+      "requestId": "south-center:61311",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305924262:row-48"
+      ]
+    },
+    {
+      "requestId": "south-center:46513",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305856351:row-49"
+      ]
+    },
+    {
+      "requestId": "south-center:35265",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305893337:row-50"
+      ]
+    },
+    {
+      "requestId": "south-center:13203",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305897498:row-51"
+      ]
+    },
+    {
+      "requestId": "south-center:26896",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:304468627:row-52"
+      ]
+    },
+    {
+      "requestId": "south-center:87819",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305820725:row-53"
+      ]
+    },
+    {
+      "requestId": "south-center:5406",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305832359:row-54"
+      ]
+    },
+    {
+      "requestId": "south-center:86864",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305922446:row-55"
+      ]
+    },
+    {
+      "requestId": "south-center:17896",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305915645:row-56"
+      ]
+    },
+    {
+      "requestId": "south-center:18023",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "south-center:control:305816952:row-57"
+      ]
+    }
+  ],
+  "controlWithoutUniqueMatch": []
+}

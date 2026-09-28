@@ -1,0 +1,468 @@
+{
+  "method": "Совпадение даты, окна, типов, района, адреса без квартиры, подключения и гигабита. Это кандидат соответствия, не доказанная идентичность.",
+  "links": [
+    {
+      "requestId": "east:74198",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305927238:row-2"
+      ]
+    },
+    {
+      "requestId": "east:86160",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305838184:row-3"
+      ]
+    },
+    {
+      "requestId": "east:50104",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305857695:row-4"
+      ]
+    },
+    {
+      "requestId": "east:46393",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305849742:row-5"
+      ]
+    },
+    {
+      "requestId": "east:10135",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305886764:row-6"
+      ]
+    },
+    {
+      "requestId": "east:18754",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305893375:row-7"
+      ]
+    },
+    {
+      "requestId": "east:84627",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305738126:row-8"
+      ]
+    },
+    {
+      "requestId": "east:61540",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305821472:row-9"
+      ]
+    },
+    {
+      "requestId": "east:74949",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305887331:row-10"
+      ]
+    },
+    {
+      "requestId": "east:41077",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305896844:row-11"
+      ]
+    },
+    {
+      "requestId": "east:87693",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305891560:row-12"
+      ]
+    },
+    {
+      "requestId": "east:93086",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305828555:row-13"
+      ]
+    },
+    {
+      "requestId": "east:57866",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305919472:row-14"
+      ]
+    },
+    {
+      "requestId": "east:35675",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305886674:row-15"
+      ]
+    },
+    {
+      "requestId": "east:82388",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305866236:row-16"
+      ]
+    },
+    {
+      "requestId": "east:23380",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305863399:row-17"
+      ]
+    },
+    {
+      "requestId": "east:37272",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305853044:row-18"
+      ]
+    },
+    {
+      "requestId": "east:71388",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305885296:row-19"
+      ]
+    },
+    {
+      "requestId": "east:34366",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305888536:row-20"
+      ]
+    },
+    {
+      "requestId": "east:67554",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305813811:row-21"
+      ]
+    },
+    {
+      "requestId": "east:94409",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305825144:row-22"
+      ]
+    },
+    {
+      "requestId": "east:10245",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305890789:row-23"
+      ]
+    },
+    {
+      "requestId": "east:52405",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305482292:row-24"
+      ]
+    },
+    {
+      "requestId": "east:30769",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305863056:row-25"
+      ]
+    },
+    {
+      "requestId": "east:98182",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305622276:row-26"
+      ]
+    },
+    {
+      "requestId": "east:76082",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305838445:row-27"
+      ]
+    },
+    {
+      "requestId": "east:29890",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305896248:row-28"
+      ]
+    },
+    {
+      "requestId": "east:77563",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305857498:row-29"
+      ]
+    },
+    {
+      "requestId": "east:53587",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305534517:row-30"
+      ]
+    },
+    {
+      "requestId": "east:82808",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305825274:row-31"
+      ]
+    },
+    {
+      "requestId": "east:7939",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305889650:row-32"
+      ]
+    },
+    {
+      "requestId": "east:92031",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305929608:row-33"
+      ]
+    },
+    {
+      "requestId": "east:31260",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305799343:row-34"
+      ]
+    },
+    {
+      "requestId": "east:69967",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305868471:row-35"
+      ]
+    },
+    {
+      "requestId": "east:22634",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305895738:row-36"
+      ]
+    },
+    {
+      "requestId": "east:98815",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305898240:row-37"
+      ]
+    },
+    {
+      "requestId": "east:33527",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305549935:row-38"
+      ]
+    },
+    {
+      "requestId": "east:21571",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305898233:row-39"
+      ]
+    },
+    {
+      "requestId": "east:47670",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305896864:row-40"
+      ]
+    },
+    {
+      "requestId": "east:17892",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305868415:row-41"
+      ]
+    },
+    {
+      "requestId": "east:51115",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305910361:row-42"
+      ]
+    },
+    {
+      "requestId": "east:76643",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305911691:row-43"
+      ]
+    },
+    {
+      "requestId": "east:43506",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305817137:row-44"
+      ]
+    },
+    {
+      "requestId": "east:48174",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305392043:row-45"
+      ]
+    },
+    {
+      "requestId": "east:48227",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305882940:row-46"
+      ]
+    },
+    {
+      "requestId": "east:60720",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305894885:row-47"
+      ]
+    },
+    {
+      "requestId": "east:48238",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305897279:row-48"
+      ]
+    },
+    {
+      "requestId": "east:41912",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305895612:row-49"
+      ]
+    },
+    {
+      "requestId": "east:4893",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305891993:row-50"
+      ]
+    },
+    {
+      "requestId": "east:68476",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305884768:row-51"
+      ]
+    },
+    {
+      "requestId": "east:50219",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305887986:row-52"
+      ]
+    },
+    {
+      "requestId": "east:76678",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305887351:row-53"
+      ]
+    },
+    {
+      "requestId": "east:47330",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305896987:row-54"
+      ]
+    },
+    {
+      "requestId": "east:26645",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305888304:row-55"
+      ]
+    },
+    {
+      "requestId": "east:24076",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305895089:row-56"
+      ]
+    },
+    {
+      "requestId": "east:30243",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305913737:row-57"
+      ]
+    },
+    {
+      "requestId": "east:32807",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305880939:row-58"
+      ]
+    },
+    {
+      "requestId": "east:73572",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305887546:row-59"
+      ]
+    },
+    {
+      "requestId": "east:41962",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305898346:row-60"
+      ]
+    },
+    {
+      "requestId": "east:97886",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305898353:row-61"
+      ]
+    },
+    {
+      "requestId": "east:17349",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305898320:row-62"
+      ]
+    },
+    {
+      "requestId": "east:54964",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305883073:row-63"
+      ]
+    },
+    {
+      "requestId": "east:21367",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305896177:row-64"
+      ]
+    },
+    {
+      "requestId": "east:24980",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305896956:row-65"
+      ]
+    },
+    {
+      "requestId": "east:15648",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305898371:row-66"
+      ]
+    },
+    {
+      "requestId": "east:57299",
+      "status": "unique-candidate",
+      "controlRequestIds": [
+        "east:control:305914822:row-67"
+      ]
+    }
+  ],
+  "controlWithoutUniqueMatch": []
+}

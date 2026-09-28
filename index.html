@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Маршрут — помощник диспетчера</title>
+  <link rel="stylesheet" href="/web/styles.css">
+  <script type="module" src="/web/app.js"></script>
+</head>
+<body>
+  <header><div><span class="eyebrow">ПЛАНИРОВАНИЕ ВЫЕЗДОВ</span><h1>Маршрут<span class="dot">.</span></h1></div><span class="badge">Прототип • взвешенные эвристики</span></header>
+  <main>
+    <section class="toolbar"><div><h2>Рабочий день под контролем</h2><p>Назначения, время и понятные причины каждого решения.</p></div><div class="actions"><label class="button secondary">Загрузить JSON<input id="upload" type="file" accept=".json,application/json" hidden></label><button id="demo" class="secondary">Демо-данные</button><button id="export">Скачать план</button></div></section>
+    <p id="error" role="alert" hidden></p>
+    <section id="metrics" class="metrics" aria-label="Показатели плана"></section>
+    <div class="layout">
+      <aside>
+        <section class="panel"><h2>Что важнее в плане?</h2><p class="muted">Сначала выполнимость и число заявок. Затем — баланс выбранных факторов.</p><div id="weights"></div><button id="build" class="full">Построить исходный план</button><p class="small">Кнопка начинает расчёт дня заново, без добавленных событий.</p></section>
+        <section class="panel"><h2>Срочная заявка</h2><p class="muted">Начатые выезды сохраняются. Будущие назначения можно изменить.</p>
+          <form id="urgent-form">
+            <div class="form-grid"><label>Время события<input id="event-time" type="time" value="10:00" required></label><label>Начать до<input id="event-end" type="time" value="11:30" required></label><label>Длительность, мин<input id="event-duration" type="number" value="40" min="1" step="1" required></label><label>Навык<select id="event-skill"></select></label><label>Широта<input id="event-lat" type="number" step="any" min="-90" max="90" value="55.753" required></label><label>Долгота<input id="event-lon" type="number" step="any" min="-180" max="180" value="37.63" required></label></div>
+            <label>Требуемый транспорт<select id="event-transport"><option value="">Любой</option></select></label><button type="submit" class="full">Добавить и перепланировать</button>
+          </form>
+        </section>
+      </aside>
+      <div class="content">
+        <section class="panel map-panel"><div class="section-heading"><h2>Карта выездов</h2><span id="plan-label" class="badge"></span></div><div id="map" aria-label="Карта маршрутов"></div><p class="small">Линии соединяют точки по порядку посещения. Пробег оценочный: расстояние по координатам × 1,25. Дорожная сеть и пробки не учитываются. Для подложки нужен интернет; без неё точки и линии остаются видны. Наведите на точку для подробностей.</p></section>
+        <section class="panel"><h2>Сравнение с базовым планом</h2><p class="small">Базовый план: порядок входных заявок, первый доступный инженер, добавление в конец маршрута.</p><div id="comparison"></div></section>
+        <section id="changes-panel" class="panel" hidden><h2>Что изменилось после события</h2><div id="changes"></div></section>
+        <section class="panel"><h2>Маршруты и объяснения</h2><div id="routes"></div></section>
+        <section class="panel"><h2>Не назначены</h2><div id="unassigned"></div></section>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
