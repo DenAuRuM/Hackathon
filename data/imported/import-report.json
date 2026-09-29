@@ -1,0 +1,280 @@
+{
+  "schemaVersion": "dispatcher-import-report-v1",
+  "totalSyntheticRequests": 205,
+  "totalControlRequests": 205,
+  "totalRejectedRows": 0,
+  "notes": [
+    "Синтетические заявки — вход для будущего планирования. Контроль — отдельный источник сравнения.",
+    "В контрольных файлах сохранены все статусы, в том числе Выполнена и Отменена; они не переносятся в синтетический сценарий.",
+    "ID синтетических и контрольных заявок отличаются. Сопоставление выполняется по признакам, не по номеру строки.",
+    "Бригада в контрольном файле не доказывает число людей, их квалификацию, транспорт, смену или доступность.",
+    "Временные окна — трактовка адаптера, которую необходимо подтвердить. Длительность не вычисляется из размера окна.",
+    "Подключение FMC и гигабитный признак сохранены; они не превращаются в ограничения транспорта или оборудования.",
+    "Входные CSV и исходные значения сохранены без изменений. Исходные поля каждой заявки доступны в source.raw."
+  ],
+  "regions": [
+    {
+      "regionId": "east",
+      "regionName": "Восток",
+      "syntheticRequests": 66,
+      "controlRequests": 66,
+      "files": [
+        {
+          "file": "Восток Синтетические данные.csv",
+          "encoding": "windows-1251",
+          "requestRows": 66,
+          "officeRows": 1,
+          "skippedBlankRows": 2,
+          "rejectedRows": 0,
+          "warnings": 0
+        },
+        {
+          "file": "Восток Контрольное распределение..csv",
+          "encoding": "windows-1251",
+          "requestRows": 66,
+          "officeRows": 0,
+          "skippedBlankRows": 0,
+          "rejectedRows": 0,
+          "warnings": 0
+        }
+      ],
+      "dates": [
+        "2026-08-17"
+      ],
+      "officeAddresses": [
+        "г. Москва, ул Юных Ленинцев, д 83с 4"
+      ],
+      "uniqueRequestAddresses": 65,
+      "requestsByTypeBK": {
+        "Глобальная проблема": 8,
+        "Дозаказ": 6,
+        "Локальная заявка": 21,
+        "Подключение": 31
+      },
+      "requestsByTypeHD": {
+        "Авария": 3,
+        "Дозаказ оборудования": 5,
+        "Заказ подключения/Дозаказ оборудования": 2,
+        "Заявка на подключение": 3,
+        "Информация": 5,
+        "Конвергенция абонента": 27,
+        "Мониторинг": 1,
+        "Нет линка": 10,
+        "Переключение на Гбит/с": 2,
+        "Работа с кабелем": 2,
+        "Разрывы": 2,
+        "Роутер. Замена техническим специалистом": 2,
+        "TVE/ENT. Другие ошибки": 1,
+        "TVE/ENT. Замена приставки техником": 1
+      },
+      "windows": {
+        "10:00–12:00": 14,
+        "12:00–14:00": 15,
+        "14:00–16:00": 10,
+        "16:00–18:00": 7,
+        "18:00–20:00": 12,
+        "20:00–22:00": 8
+      },
+      "controlStatuses": {
+        "В пути": 2,
+        "В работе": 4,
+        "Выполнена": 36,
+        "Не отправлена": 2,
+        "Отменена": 6,
+        "Отправлена": 12,
+        "Просрочена": 4
+      },
+      "controlDistinctCrewLabels": 12,
+      "controlWithoutCrew": 2,
+      "repeatedControlIds": [],
+      "matching": {
+        "unique-candidate": 66
+      },
+      "readyForPlanning": false,
+      "missingByCode": {
+        "DURATION": 66,
+        "ENGINEERS": 1,
+        "LOCATION": 66,
+        "PRIORITY": 66,
+        "TIME_SEMANTICS": 1,
+        "TRANSPORT_POLICY": 66
+      }
+    },
+    {
+      "regionId": "south-east",
+      "regionName": "Юго-восток",
+      "syntheticRequests": 83,
+      "controlRequests": 83,
+      "files": [
+        {
+          "file": "Юго-восток Синтетические данные.csv",
+          "encoding": "windows-1251",
+          "requestRows": 83,
+          "officeRows": 1,
+          "skippedBlankRows": 2,
+          "rejectedRows": 0,
+          "warnings": 0
+        },
+        {
+          "file": "Юго-восток Контрольное распределение.csv",
+          "encoding": "windows-1251",
+          "requestRows": 83,
+          "officeRows": 0,
+          "skippedBlankRows": 0,
+          "rejectedRows": 0,
+          "warnings": 1
+        }
+      ],
+      "dates": [
+        "2026-08-17"
+      ],
+      "officeAddresses": [
+        "г. Москва, ул Бирюлёвская, д 1с1"
+      ],
+      "uniqueRequestAddresses": 75,
+      "requestsByTypeBK": {
+        "Глобальная проблема": 12,
+        "Дозаказ": 4,
+        "Локальная заявка": 31,
+        "Подключение": 36
+      },
+      "requestsByTypeHD": {
+        "Авария": 12,
+        "Дозаказ оборудования": 2,
+        "Заказ подключения/Дозаказ оборудования": 8,
+        "Заявка на подключение": 4,
+        "Конвергенция абонента": 26,
+        "Нет линка": 11,
+        "Низкая скорость": 4,
+        "Переключение на Гбит/с": 2,
+        "Работа с кабелем": 3,
+        "Разрывы": 1,
+        "Рост ошибок на порту": 4,
+        "Роутер. Замена техническим специалистом": 1,
+        "IP-адрес 169...": 3,
+        "TVE/ENT. Замена приставки техником": 2
+      },
+      "windows": {
+        "00:01–23:59": 11,
+        "10:00–12:00": 17,
+        "12:00–14:00": 18,
+        "14:00–16:00": 12,
+        "16:00–18:00": 10,
+        "18:00–20:00": 9,
+        "20:00–22:00": 6
+      },
+      "controlStatuses": {
+        "В пути": 4,
+        "В работе": 3,
+        "Выполнена": 39,
+        "Отменена": 10,
+        "Отправлена": 21,
+        "Просрочена": 6
+      },
+      "controlDistinctCrewLabels": 12,
+      "controlWithoutCrew": 0,
+      "repeatedControlIds": [
+        {
+          "sourceId": "305898293",
+          "count": 2
+        }
+      ],
+      "matching": {
+        "ambiguous": 4,
+        "unique-candidate": 79
+      },
+      "readyForPlanning": false,
+      "missingByCode": {
+        "DURATION": 83,
+        "ENGINEERS": 1,
+        "LOCATION": 83,
+        "PRIORITY": 83,
+        "TIME_SEMANTICS": 1,
+        "TRANSPORT_POLICY": 83
+      }
+    },
+    {
+      "regionId": "south-center",
+      "regionName": "Югоцентр",
+      "syntheticRequests": 56,
+      "controlRequests": 56,
+      "files": [
+        {
+          "file": "Югоцентр Синтетические данные.csv",
+          "encoding": "windows-1251",
+          "requestRows": 56,
+          "officeRows": 1,
+          "skippedBlankRows": 2,
+          "rejectedRows": 0,
+          "warnings": 0
+        },
+        {
+          "file": "Югоцентр Контрольное распределение..csv",
+          "encoding": "windows-1251",
+          "requestRows": 56,
+          "officeRows": 0,
+          "skippedBlankRows": 0,
+          "rejectedRows": 0,
+          "warnings": 0
+        }
+      ],
+      "dates": [
+        "2026-08-17"
+      ],
+      "officeAddresses": [
+        "г.Москва проезд Симферопольский, д.7"
+      ],
+      "uniqueRequestAddresses": 55,
+      "requestsByTypeBK": {
+        "Глобальная проблема": 1,
+        "Дозаказ": 2,
+        "Локальная заявка": 25,
+        "Подключение": 28
+      },
+      "requestsByTypeHD": {
+        "Заказ подключения/Дозаказ оборудования": 4,
+        "Заявка на подключение": 2,
+        "Информация": 1,
+        "Конвергенция абонента": 24,
+        "Нет линка": 10,
+        "Переключение на Гбит/с": 3,
+        "Работа с кабелем": 2,
+        "Разрывы": 2,
+        "Рост ошибок на порту": 1,
+        "Роутер. Замена техническим специалистом": 1,
+        "ТВ. Замена приставки техником": 2,
+        "IP-адрес 169...": 3,
+        "TVE/ENT. Другие ошибки": 1
+      },
+      "windows": {
+        "10:00–12:00": 11,
+        "12:00–14:00": 10,
+        "14:00–16:00": 6,
+        "16:00–18:00": 11,
+        "18:00–20:00": 10,
+        "20:00–22:00": 8
+      },
+      "controlStatuses": {
+        "В работе": 4,
+        "Выполнена": 37,
+        "Отменена": 5,
+        "Отправлена": 10
+      },
+      "controlDistinctCrewLabels": 11,
+      "controlWithoutCrew": 0,
+      "repeatedControlIds": [],
+      "matching": {
+        "unique-candidate": 56
+      },
+      "readyForPlanning": false,
+      "missingByCode": {
+        "DURATION": 56,
+        "ENGINEERS": 1,
+        "LOCATION": 56,
+        "PRIORITY": 56,
+        "TIME_SEMANTICS": 1,
+        "TRANSPORT_POLICY": 56
+      }
+    }
+  ]
+}

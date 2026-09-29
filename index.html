@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Маршрут — помощник диспетчера</title>
+  <link rel="stylesheet" href="/web/styles.css">
+  <script type="module" src="/web/app.js"></script>
+</head>
+<body>
+  <header><div><span class="eyebrow">ПЛАНИРОВАНИЕ ВЫЕЗДОВ</span></div><span class="badge">Прототип • взвешенные эвристики</span></header>
+  <main>
+    <section class="toolbar"><div><h2>Рабочий день под контролем</h2><p>Назначения, время и понятные причины каждого решения.</p></div><div class="actions"><label class="button secondary">Загрузить JSON<input id="upload" type="file" accept=".json,application/json" multiple></label><button id="demo" class="secondary">Демо-данные</button><button id="export">Скачать план</button></div></section>
+    <section class="panel"><label for="dataset">Данные из CSV</label><div class="actions"><select id="dataset"><option value="south-east">Юго-восток — 83 заявки</option><option value="east">Восток — 66 заявок</option><option value="south-center">Югоцентр — 56 заявок</option></select><button id="load-dataset" class="secondary">Открыть набор</button></div><p class="small">Можно загрузить matching.json: связанные заявки откроются автоматически. Для своих данных выберите source.json и enrichment.json вместе. Незаполненные поля покажем перед расчётом.</p></section>
+    <p id="error" role="alert" hidden></p>
+    <section id="preparation" class="panel" hidden>
+      <h2 id="source-title">Подготовка данных</h2><p id="import-origin" class="small"></p><p id="import-note"></p><p id="prep-status" role="status"></p>
+      <div id="preparation-fields"></div>
+      <details><summary>Найти координаты по улице и дому</summary>
+        <p>Адрес выбранной заявки или стартовый адрес инженера будет отправлен в Яндекс Геокодер. Проверьте найденный дом перед применением. Нужен ключ HTTP API Геокодера.</p>
+        <label>Ключ Геокодера<input id="geocoder-key" type="password" autocomplete="off"></label>
+        <label>Адрес из набора<select id="geocode-address"></select></label>
+        <button id="geocode-search" type="button">Найти дом</button>
+        <p id="geocode-status" role="status"></p><div id="geocode-results"></div>
+      </details>
+      <div id="missing-summary"></div><p class="small">Здесь выдаются основные моменты, которые нужно заполнить. После того, как Вы их заполните, нужно нажать «Проверить и рассчитать». После чего система укажет, какие поля необходимо заполнить.</p>
+      <details><summary>Заявки и соответствия контролю</summary><div id="source-requests" class="table-scroll source-table"></div></details>
+      <details open><summary>Заполнить недостающие данные</summary><p class="small">Редактируйте координаты, длительности, приоритеты и список engineers. Можно загрузить заполненный enrichment.json той же кнопкой «Загрузить JSON». Значения null означают отсутствие данных; бригада из контроля не превращается автоматически в инженера.</p><label for="enrichment-editor">Данные для дополнения заявок (JSON)</label><textarea id="enrichment-editor" spellcheck="false"></textarea><div class="actions"><button id="apply-enrichment">Проверить и рассчитать</button><button id="download-workspace" class="secondary">Скачать рабочий набор</button></div></details>
+    </section>
+    <section id="metrics" class="metrics" aria-label="Показатели плана"></section>
+    <p id="weight-status" role="status"></p>
+    <details class="panel"><summary>Как веса повлияли на оценку</summary><div id="objective"></div></details>
+    <div class="layout">
+      <aside>
+        <section class="panel"><h2>Что важнее в плане?</h2><p class="muted">Здесь выбирается вес эвристик, что будет выполняться в приоритете. Веса задаёт сам пользователь.</p><div id="weights"></div><button id="build" class="full">Построить исходный план</button><p class="small">Кнопка начинает расчёт дня заново, без добавленных событий.</p></section>
+        <section class="panel"><h2>Срочная заявка</h2><p class="muted">Начатые выезды сохраняются. Будущие назначения можно изменить.</p>
+          <form id="urgent-form">
+            <div class="form-grid"><label>Время события<input id="event-time" type="time" value="10:00" required></label><label>Начать до<input id="event-end" type="time" value="11:30" required></label><label>Длительность, мин<input id="event-duration" type="number" value="40" min="1" step="1" required></label><label>Навык<select id="event-skill"></select></label><label>Широта<input id="event-lat" type="number" step="any" min="-90" max="90" value="55.753" required></label><label>Долгота<input id="event-lon" type="number" step="any" min="-180" max="180" value="37.63" required></label></div>
+            <label>Требуемый транспорт<select id="event-transport"><option value="">Любой</option></select></label><button type="submit" class="full">Добавить и перепланировать</button>
+          </form>
+        </section>
+      </aside>
+      <div class="content">
+        <section class="panel map-panel"><div class="section-heading"><h2>Карта выездов</h2><span id="plan-label" class="badge"></span></div><div class="map-settings"><label>Поставщик карты<select id="map-provider"><option value="osm">OpenStreetMap</option><option value="yandex">Яндекс Карты</option></select></label><label>API-ключ Яндекс JavaScript API<input id="yandex-key" type="password" autocomplete="off" placeholder="Нужен только для Яндекс Карт"></label><button id="apply-map" class="secondary">Применить карту</button></div><p id="map-status" role="status" class="small"></p><div id="map" aria-label="Карта маршрутов"></div><p class="small">Линии соединяют точки по порядку посещения. Пробег оценочный: расстояние по координатам × 1,25. Смена карты не добавляет дорожную маршрутизацию и геокодирование. Ключ используется только в текущей странице и не включается в скачиваемые файлы. Для Яндекса разрешите адрес этого сайта в настройках ключа.</p></section>
+        <section class="panel"><h2>Сравнение с базовым планом</h2><p class="small">Базовый план: порядок входных заявок, первый доступный инженер, добавление в конец маршрута.</p><div id="comparison"></div></section>
+        <section id="changes-panel" class="panel" hidden><h2>Что изменилось после события</h2><div id="changes"></div></section>
+        <section class="panel"><h2>Маршруты и объяснения</h2><div id="routes"></div></section>
+        <section class="panel"><h2>Не назначены</h2><div id="unassigned"></div></section>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

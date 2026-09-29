@@ -1,0 +1,17 @@
+{
+  "engineers": [
+    { "id": "e1", "name": "Анна", "startLocation": { "lat": 55.7512, "lon": 37.6184 }, "shiftStart": "09:00", "shiftEnd": "18:00", "skills": ["Локальные работы", "Аварийные работы"], "transport": "Автомобиль" },
+    { "id": "e2", "name": "Борис", "startLocation": { "lat": 55.765, "lon": 37.605 }, "shiftStart": "09:00", "shiftEnd": "17:00", "skills": ["Локальные работы"], "transport": "Велосипед" },
+    { "id": "e3", "name": "Вера", "startLocation": { "lat": 55.735, "lon": 37.64 }, "shiftStart": "09:00", "shiftEnd": "18:00", "skills": ["Работы на подключение и дозаказы", "Аварийные работы"], "transport": "Автомобиль" }
+  ],
+  "requests": [
+    { "id": "r1", "location": { "lat": 55.77, "lon": 37.61 }, "durationMinutes": 45, "windowStart": "09:00", "windowEnd": "11:00", "priority": "Обычная", "requiredSkill": "Локальные работы" },
+    { "id": "r2", "location": { "lat": 55.735, "lon": 37.655 }, "durationMinutes": 60, "windowStart": "09:00", "windowEnd": "11:00", "priority": "Обычная", "requiredSkill": "Работы на подключение и дозаказы", "requiredTransport": "Автомобиль" },
+    { "id": "r3", "location": { "lat": 55.776, "lon": 37.62 }, "durationMinutes": 30, "windowStart": "10:00", "windowEnd": "13:00", "priority": "Обычная", "requiredSkill": "Локальные работы" },
+    { "id": "r4", "location": { "lat": 55.748, "lon": 37.64 }, "durationMinutes": 50, "windowStart": "11:00", "windowEnd": "14:00", "priority": "Обычная", "requiredSkill": "Аварийные работы" },
+    { "id": "r5", "location": { "lat": 55.756, "lon": 37.595 }, "durationMinutes": 40, "windowStart": "12:00", "windowEnd": "15:00", "priority": "Обычная", "requiredSkill": "Локальные работы" },
+    { "id": "r6", "location": { "lat": 55.742, "lon": 37.66 }, "durationMinutes": 60, "windowStart": "13:00", "windowEnd": "16:00", "priority": "Обычная", "requiredSkill": "Работы на подключение и дозаказы" },
+    { "id": "r7", "location": { "lat": 55.755, "lon": 37.62 }, "durationMinutes": 30, "windowStart": "09:00", "windowEnd": "17:00", "priority": "Обычная", "requiredSkill": "Аварийные работы", "requiredTransport": "Пешеход" },
+    { "id": "r8", "location": { "lat": 55.76, "lon": 37.63 }, "durationMinutes": 120, "windowStart": "17:00", "windowEnd": "17:30", "priority": "Обычная", "requiredSkill": "Локальные работы" }
+  ]
+}

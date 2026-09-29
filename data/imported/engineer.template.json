@@ -1,0 +1,12 @@
+{
+  "id": null,
+  "name": null,
+  "startLocation": {
+    "lat": null,
+    "lon": null
+  },
+  "shiftStart": null,
+  "shiftEnd": null,
+  "skills": [],
+  "transport": null
+}

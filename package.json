@@ -1,0 +1,14 @@
+{
+  "name": "dispatcher-heuristics",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "demo": "node demo.js",
+    "start": "node server.js",
+    "import:csv": "node scripts/import-csv.js",
+    "prepare:data": "node scripts/prepare-data.js"
+  },
+  "engines": { "node": ">=20" }
+}
