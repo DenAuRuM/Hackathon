@@ -5,10 +5,19 @@ const files = new Map([
   ['/', ['index.html', 'text/html']], ['/index.html', ['index.html', 'text/html']],
   ['/web/app.js', ['web/app.js', 'text/javascript']],
   ['/web/map.js', ['web/map.js', 'text/javascript']],
+  ['/web/yandex-map.js', ['web/yandex-map.js', 'text/javascript']],
   ['/web/styles.css', ['web/styles.css', 'text/css']],
   ['/src/planner.js', ['src/planner.js', 'text/javascript']],
+  ['/src/csv-import.js', ['src/csv-import.js', 'text/javascript']],
+  ['/src/import-session.js', ['src/import-session.js', 'text/javascript']],
   ['/data/demo.json', ['data/demo.json', 'application/json']],
 ]);
+for (const region of ['east', 'south-east', 'south-center']) {
+  for (const type of ['source', 'matching']) {
+    const path = `data/imported/${region}.${type}.json`;
+    files.set(`/${path}`, [path, 'application/json']);
+  }
+}
 const port = Number(process.env.PORT || 3000);
 createServer(async (req, res) => {
   const file = files.get((req.url || '').split('?')[0]);

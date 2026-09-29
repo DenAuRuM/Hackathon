@@ -4,6 +4,7 @@
   "instructions": "Заполните null фактическими значениями; engineers — полный список по схеме ядра. requestOverrides задаётся по полному id заявки. Исходные строки находятся в source JSON.",
   "confirmedTimeWindowSemantics": false,
   "confirmedNoTransportRequirements": false,
+  "routingMode": "geographic",
   "defaults": {
     "priority": null
   },

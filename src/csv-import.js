@@ -133,6 +133,7 @@ export function createEnrichmentTemplate(source) {
     instructions: 'Заполните null фактическими значениями; engineers — полный список по схеме ядра. requestOverrides задаётся по полному id заявки. Исходные строки находятся в source JSON.',
     confirmedTimeWindowSemantics: false,
     confirmedNoTransportRequirements: false,
+    routingMode: 'geographic',
     defaults: { priority: null },
     durationMinutesByTypeHD: Object.fromEntries([...new Set(source.requests.map(r => r.typeHD))].sort().map(type => [type, null])),
     locationsByAddress: Object.fromEntries([...new Set([...source.offices.map(o => o.address), ...source.requests.map(r => r.address)])].sort().map(address => [address, null])),
@@ -160,13 +161,15 @@ export function preparePlannerData(source, enrichment) {
     const changes = own(enrichment.requestOverrides ?? {}, r.id) ? enrichment.requestOverrides[r.id] : {};
     const overrides = changes && typeof changes === 'object' ? changes : {};
     const location = own(overrides, 'location') ? overrides.location : enrichment.locationsByAddress?.[r.address];
+    const addressOnly = enrichment.routingMode === 'address-only';
+    const plannerLocation = addressOnly ? (location ?? { lat: 0, lon: 0 }) : location;
     const durationMinutes = own(overrides, 'durationMinutes') ? overrides.durationMinutes : enrichment.durationMinutesByTypeHD?.[r.typeHD];
     const priority = own(overrides, 'priority') ? overrides.priority : enrichment.defaults?.priority;
     const requiredTransport = own(overrides, 'requiredTransport') ? overrides.requiredTransport : null;
-    const result = { id: r.id, address: r.address, location: location ?? null, durationMinutes: durationMinutes ?? null,
+    const result = { id: r.id, address: r.address, location: plannerLocation ?? null, durationMinutes: durationMinutes ?? null,
       windowStart: r.windowStart, windowEnd: r.windowEnd, priority: priority ?? null,
       requiredSkill: own(overrides, 'requiredSkill') ? overrides.requiredSkill : r.requiredSkill, requiredTransport };
-    if (!location || !Number.isFinite(location.lat) || Math.abs(location.lat) > 90 || !Number.isFinite(location.lon) || Math.abs(location.lon) > 180) issues.push({ requestId: r.id, code: 'LOCATION', message: 'Нужны корректные координаты адреса.' });
+    if (!addressOnly && (!location || !Number.isFinite(location.lat) || Math.abs(location.lat) > 90 || !Number.isFinite(location.lon) || Math.abs(location.lon) > 180)) issues.push({ requestId: r.id, code: 'LOCATION', message: 'Нужны корректные координаты адреса.' });
     if (!Number.isInteger(durationMinutes) || durationMinutes <= 0) issues.push({ requestId: r.id, code: 'DURATION', message: 'Нужна положительная длительность в минутах.' });
     if (!['Обычная', 'Срочная'].includes(priority)) issues.push({ requestId: r.id, code: 'PRIORITY', message: 'Нужно задать приоритет.' });
     if (!SKILLS.includes(result.requiredSkill)) issues.push({ requestId: r.id, code: 'SKILL', message: 'Нужен навык из справочника.' });
@@ -174,7 +177,8 @@ export function preparePlannerData(source, enrichment) {
     if (requiredTransport !== null && !TRANSPORTS.includes(requiredTransport)) issues.push({ requestId: r.id, code: 'TRANSPORT', message: 'Неизвестный требуемый транспорт.' });
     return result;
   });
-  const engineers = copy(enrichment.engineers ?? []);
+  const engineers = copy(enrichment.engineers ?? []).map(engineer => enrichment.routingMode === 'address-only' && !engineer.startLocation
+    ? { ...engineer, startLocation: { lat: 0, lon: 0 } } : engineer);
   if (!Array.isArray(engineers) || !engineers.length) issues.push({ code: 'ENGINEERS', message: 'Нужен список инженеров со стартовыми координатами, навыками, сменами и транспортом.' });
   else {
     try { validateData({ requests: [], engineers }); }
@@ -182,6 +186,7 @@ export function preparePlannerData(source, enrichment) {
   }
   if (issues.length) return { ready: false, data: null, issues };
   const data = { requests, engineers, metadata: { regionId: source.regionId, date: source.requests[0]?.date ?? null,
+    routingMode: enrichment.routingMode === 'address-only' ? 'address-only' : 'geographic',
     sourceFile: source.source.file, skillMapping: SKILL_BY_BK, timeWindowSemanticsConfirmed: true } };
   validateData(data);
   return { ready: true, data, issues: [] };
