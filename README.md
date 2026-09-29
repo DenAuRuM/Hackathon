@@ -52,32 +52,6 @@ npm run demo   # пример расчёта и события в консоли
 
 `objective` содержит признаки и взвешенные вклады; `alternatives` - оценку и покрытие каждого варианта. Объяснения назначений содержат ограничения и данные о вставке. Они описывают момент решения; последующие вставки могут сдвинуть позицию и время, поэтому финальное расписание объясняется отдельно.
 
-## API
-
-```js
-import { plan, baselinePlan, comparePlans, replan, loadJSON } from './src/planner.js';
-
-const data = loadJSON(jsonText);
-const result = plan(data, {
-  weights: { personnel: 8, distance: 3, waiting: 0.5 },
-  roadFactor: 1.25,
-  speeds: { 'Автомобиль': 30, 'Пешеход': 5, 'Велосипед': 15, 'Общественный транспорт': 18 },
-});
-const { baseline, optimized, delta } = comparePlans(data);
-// delta = optimized − baseline; отрицательный пробег/персонал означает сокращение.
-
-const updated = replan(result, {
-  type: 'urgent_request', time: '10:00',
-  request: {
-    id: 'urgent-1', location: { lat: 55.753, lon: 37.63 },
-    durationMinutes: 40, windowStart: '10:00', windowEnd: '11:30',
-    requiredSkill: 'Аварийные работы', requiredTransport: 'Автомобиль',
-  },
-}, { weights: { stability: 4 } });
-```
-
-Функции не изменяют входные данные. `replan` принимает результат `plan`/`replan`, в том числе после JSON-сериализации, и использует сохранённые данные/настройки. Не передавайте вручную изменённый план. Частичные веса дополняются стандартными, при перепланировании  предыдущими значениями.
-
 ### Пример JSON'a, который можно вставить в прототип и посмотреть решение.
 
 ```json
