@@ -146,6 +146,7 @@ export function preparePlannerData(source, enrichment) {
   const issues = [];
   check(source?.schemaVersion === 'dispatcher-source-v1' && source.kind === 'synthetic', 'Для планирования нужен синтетический source JSON.');
   check(enrichment?.schemaVersion === 'dispatcher-enrichment-v1' && enrichment.regionId === source.regionId, 'Шаблон дополнения относится к другому набору.');
+  check(enrichment.routingMode == null || ['geographic', 'address-only'].includes(enrichment.routingMode), 'Неизвестный routingMode.');
   if (source.rejectedRows.length) issues.push({ code: 'REJECTED_ROWS', message: 'В исходном импорте есть отклонённые строки; исправьте их перед расчётом.' });
   if (enrichment.confirmedTimeWindowSemantics !== true) issues.push({ code: 'TIME_SEMANTICS', message: 'Подтвердите, что Начало/Окончание — окно начала работы, а не фактическое время выполнения.' });
   if (new Set(source.requests.map(r => r.date)).size > 1) issues.push({ code: 'MULTIPLE_DATES', message: 'В наборе несколько дат; разделите заявки по дням.' });
@@ -162,7 +163,7 @@ export function preparePlannerData(source, enrichment) {
     const overrides = changes && typeof changes === 'object' ? changes : {};
     const location = own(overrides, 'location') ? overrides.location : enrichment.locationsByAddress?.[r.address];
     const addressOnly = enrichment.routingMode === 'address-only';
-    const plannerLocation = addressOnly ? (location ?? { lat: 0, lon: 0 }) : location;
+    const plannerLocation = addressOnly ? null : location;
     const durationMinutes = own(overrides, 'durationMinutes') ? overrides.durationMinutes : enrichment.durationMinutesByTypeHD?.[r.typeHD];
     const priority = own(overrides, 'priority') ? overrides.priority : enrichment.defaults?.priority;
     const requiredTransport = own(overrides, 'requiredTransport') ? overrides.requiredTransport : null;
@@ -170,18 +171,21 @@ export function preparePlannerData(source, enrichment) {
       windowStart: r.windowStart, windowEnd: r.windowEnd, priority: priority ?? null,
       requiredSkill: own(overrides, 'requiredSkill') ? overrides.requiredSkill : r.requiredSkill, requiredTransport };
     if (!addressOnly && (!location || !Number.isFinite(location.lat) || Math.abs(location.lat) > 90 || !Number.isFinite(location.lon) || Math.abs(location.lon) > 180)) issues.push({ requestId: r.id, code: 'LOCATION', message: 'Нужны корректные координаты адреса.' });
-    if (!Number.isInteger(durationMinutes) || durationMinutes <= 0) issues.push({ requestId: r.id, code: 'DURATION', message: 'Нужна положительная длительность в минутах.' });
+    if (!Number.isInteger(durationMinutes) || durationMinutes <= 0) issues.push({ requestId: r.id, typeHD: r.typeHD, code: 'DURATION', message: `Укажите длительность (целое число минут > 0) для типа «${r.typeHD}» или отдельно для заявки.` });
     if (!['Обычная', 'Срочная'].includes(priority)) issues.push({ requestId: r.id, code: 'PRIORITY', message: 'Нужно задать приоритет.' });
     if (!SKILLS.includes(result.requiredSkill)) issues.push({ requestId: r.id, code: 'SKILL', message: 'Нужен навык из справочника.' });
     if (!own(overrides, 'requiredTransport') && enrichment.confirmedNoTransportRequirements !== true) issues.push({ requestId: r.id, code: 'TRANSPORT_POLICY', message: 'Укажите requiredTransport для заявки (null — без ограничения) либо подтвердите отсутствие требований по умолчанию.' });
     if (requiredTransport !== null && !TRANSPORTS.includes(requiredTransport)) issues.push({ requestId: r.id, code: 'TRANSPORT', message: 'Неизвестный требуемый транспорт.' });
     return result;
   });
-  const engineers = copy(enrichment.engineers ?? []).map(engineer => enrichment.routingMode === 'address-only' && !engineer.startLocation
-    ? { ...engineer, startLocation: { lat: 0, lon: 0 } } : engineer);
-  if (!Array.isArray(engineers) || !engineers.length) issues.push({ code: 'ENGINEERS', message: 'Нужен список инженеров со стартовыми координатами, навыками, сменами и транспортом.' });
+  let engineers = copy(enrichment.engineers ?? []);
+  if (Array.isArray(engineers)) engineers = engineers.map(engineer => engineer && !engineer.startLocation && engineer.startAddress
+    ? { ...engineer, startLocation: enrichment.locationsByAddress?.[engineer.startAddress] ?? null } : engineer);
+  if (!Array.isArray(engineers) || !engineers.length) issues.push({ code: 'ENGINEERS', message: enrichment.routingMode === 'address-only'
+    ? 'Нужен список инженеров: ID, навыки, начало и конец смены, транспорт. Координаты в этом режиме не нужны.'
+    : 'Нужен список инженеров со стартовыми координатами, навыками, сменами и транспортом.' });
   else {
-    try { validateData({ requests: [], engineers }); }
+    try { validateData({ requests: [], engineers, metadata: { routingMode: enrichment.routingMode } }); }
     catch (error) { issues.push({ code: 'ENGINEERS', message: error.message }); }
   }
   if (issues.length) return { ready: false, data: null, issues };

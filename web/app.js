@@ -13,7 +13,7 @@ for (const [key, value] of Object.entries(DEFAULT_WEIGHTS)) {
   const wrapper = document.createElement('div'); wrapper.className = 'weight';
   wrapper.innerHTML = `<label for="weight-${key}">${labels[key]}<output id="value-${key}">${value}</output></label><input id="weight-${key}" type="range" min="0" max="20" step="0.1" value="${value}">`;
   $('weights').append(wrapper);
-  $(`weight-${key}`).addEventListener('input', e => { $(`value-${key}`).textContent = e.target.value; });
+  $(`weight-${key}`).addEventListener('input', e => { $(`value-${key}`).textContent = e.target.value; $('weight-status').textContent = 'Веса изменены. Нажмите «Построить исходный план», чтобы применить их.'; });
 }
 for (const skill of SKILLS) $('event-skill').add(new Option(skill, skill));
 $('event-skill').value = 'Аварийные работы';
@@ -31,6 +31,7 @@ function clearPlan() {
   $('routes').textContent = 'Маршруты ещё не рассчитаны.'; $('unassigned').textContent = 'Недостаток исходных данных не означает невыполнимость заявок.';
   $('changes-panel').hidden = true; $('plan-label').textContent = 'Требуется подготовка';
   mapView.clear('Для карты нужны координаты и рассчитанный план.');
+  $('objective').textContent = ''; $('weight-status').textContent = '';
 }
 function build() {
   if (!data) throw new Error('Сначала заполните недостающие данные и нажмите «Проверить и рассчитать».');
@@ -50,9 +51,11 @@ function displayWorkspace(result) {
   $('source-title').textContent = `${result.source.regionName} · заявок: ${result.source.requests.length}`;
   $('import-note').textContent = result.note || 'Исходные заявки загружены. Заполните недостающие поля для расчёта.';
   $('enrichment-editor').value = JSON.stringify(result.enrichment, null, 2);
+  renderPreparation(result);
   const summary = new Map();
   for (const issue of result.issues) {
-    const item = summary.get(issue.code) || { count: 0, message: issue.message }; item.count++; summary.set(issue.code, item);
+    const key = issue.code === 'DURATION' ? `${issue.code}:${issue.typeHD}` : issue.code;
+    const item = summary.get(key) || { count: 0, message: issue.message }; item.count++; summary.set(key, item);
   }
   $('missing-summary').innerHTML = [...summary.values()].map(item => `<p class="issue">${escape(item.message)} <strong>(${item.count})</strong></p>`).join('');
   $('prep-status').textContent = result.ready ? 'Данные заполнены: план рассчитан ниже.' : 'JSON загружен успешно. Для расчёта нужны дополнительные сведения, которых нет в исходном CSV. Числа в скобках — количество заявок или общих настроек, требующих заполнения.';
@@ -61,6 +64,64 @@ function displayWorkspace(result) {
   $('source-requests').innerHTML = `<table><thead><tr><th>ID</th><th>Адрес</th><th>Окно</th><th>Навык</th><th>Контроль</th></tr></thead><tbody>${result.source.requests.map(r => `<tr><td>${escape(r.id)}</td><td>${escape(r.address)}</td><td>${escape(r.windowStart)}–${escape(r.windowEnd)}</td><td>${escape(r.requiredSkill ?? 'Не указан')}</td><td>${statuses[links.get(r.id)] || 'Не загружен'}</td></tr>`).join('')}</tbody></table>`;
   if (result.ready) { data = result.data; build(); }
 }
+function editEnrichment(change) {
+  const enrichment = JSON.parse($('enrichment-editor').value);
+  change(enrichment);
+  $('enrichment-editor').value = JSON.stringify(enrichment, null, 2);
+  $('enrichment-editor').oninput();
+}
+function renderPreparation(result) {
+  const e = result.enrichment;
+  $('preparation-fields').innerHTML = `<h3>Настройки расчёта</h3><label>Режим<select id="routing-mode"><option value="geographic">С координатами и картой</option><option value="address-only">Только адреса, без переездов</option></select></label><label><input id="confirm-time" type="checkbox"> «Начало/Окончание» задают окно начала работы</label><label><input id="confirm-transport" type="checkbox"> По умолчанию требований к транспорту нет</label><label>Общий приоритет<select id="default-priority"><option value="">Не задан</option><option>Обычная</option><option>Срочная</option></select></label><h3>Длительность работ в минутах</h3><p>Укажите в полях ниже длительность работ (примерное в минутах), исходя из опыта без учета транспорта</p><div id="duration-fields"></div><p>Инженеры задаются в JSON ниже: ID, навыки, смена, транспорт. Для карты можно указать startAddress и найти его координаты через поиск адреса.</p>`;
+  $('routing-mode').value = e.routingMode || 'geographic';
+  $('confirm-time').checked = e.confirmedTimeWindowSemantics === true;
+  $('confirm-transport').checked = e.confirmedNoTransportRequirements === true;
+  $('default-priority').value = e.defaults?.priority || '';
+  $('routing-mode').onchange = guard(() => editEnrichment(x => { x.routingMode = $('routing-mode').value; }));
+  $('confirm-time').onchange = guard(() => editEnrichment(x => { x.confirmedTimeWindowSemantics = $('confirm-time').checked; }));
+  $('confirm-transport').onchange = guard(() => editEnrichment(x => { x.confirmedNoTransportRequirements = $('confirm-transport').checked; }));
+  $('default-priority').onchange = guard(() => editEnrichment(x => { x.defaults ??= {}; x.defaults.priority = $('default-priority').value || null; }));
+  const types = [...new Set(result.source.requests.map(r => r.typeHD))].sort();
+  for (const type of types) {
+    const label = document.createElement('label');
+    label.textContent = `${type} (${result.source.requests.filter(r => r.typeHD === type).length} заявок)`;
+    const input = document.createElement('input'); input.type = 'number'; input.min = '1'; input.step = '1';
+    input.value = e.durationMinutesByTypeHD?.[type] ?? '';
+    input.oninput = guard(() => editEnrichment(x => { x.durationMinutesByTypeHD ??= {}; x.durationMinutesByTypeHD[type] = input.value === '' ? null : Number(input.value); }));
+    label.append(input); $('duration-fields').append(label);
+  }
+  const addresses = [...new Set([...result.source.requests.map(r => r.address), ...result.source.offices.map(o => o.address), ...(Array.isArray(e.engineers) ? e.engineers.map(x => x.startAddress).filter(Boolean) : [])])];
+  $('geocode-address').replaceChildren(...addresses.map(address => new Option(address, address)));
+  $('geocode-results').replaceChildren(); $('geocode-status').textContent = '';
+}
+$('geocode-search').onclick = guard(async () => {
+  const address = $('geocode-address').value, revision = importRevision, source = workspace?.source;
+  const key = $('geocoder-key').value.trim();
+  if (!key) throw new Error('Введите ключ HTTP API Геокодера Яндекса.');
+  $('geocode-search').disabled = true; $('geocode-results').replaceChildren();
+  $('geocode-status').textContent = 'Ищем адрес…';
+  try {
+    const response = await fetch('/api/geocode', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ address, key }) });
+    if (!response.headers.get('content-type')?.includes('application/json')) throw new Error('Перезапустите сервер: новый поиск адресов ещё не подключён.');
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.error || 'Не удалось найти адрес.');
+    if (revision !== importRevision || source !== workspace?.source) return;
+    $('geocode-status').textContent = result.candidates.length ? 'Проверьте полный адрес. Применить можно только результат с точностью до дома.' : 'Адрес не найден. Координаты не изменены.';
+    for (const candidate of result.candidates) {
+      const row = document.createElement('p'); row.textContent = `${candidate.text} · точность: ${candidate.precision} `;
+      const button = document.createElement('button'); button.textContent = 'Применить координаты'; button.disabled = !candidate.exactHouse;
+      button.onclick = guard(() => {
+        if (source !== workspace?.source) throw new Error('Набор сменился. Повторите поиск.');
+        editEnrichment(e => {
+          e.locationsByAddress ??= {}; e.locationsByAddress[address] = candidate.location;
+          for (const engineer of e.engineers || []) if (engineer.startAddress === address) engineer.startLocation = candidate.location;
+        });
+        $('geocode-status').textContent = `Координаты внесены для: ${address}. Нажмите «Проверить и рассчитать».`;
+        button.disabled = true;
+      }); row.append(button); $('geocode-results').append(row);
+    }
+  } finally { $('geocode-search').disabled = false; }
+});
 async function importDocuments(documents, revision, origin) {
   const result = await resolveImport(documents, { loadRegion, existing: workspace });
   if (revision !== importRevision) return;
@@ -136,11 +197,17 @@ $('export').onclick = guard(() => {
 function metric(label, value) { return `<div class="metric"><span>${label}</span><strong>${value}</strong></div>`; }
 function render() {
   const m = current.metrics;
-  $('metrics').innerHTML = metric('Назначено заявок', `${m.assignedRequests} / ${m.totalRequests}`) + metric('Исполнителей в плане', m.usedEngineers) + metric('Общий пробег, км', m.totalDistanceKm) + metric('Не назначены', m.unassignedRequests);
+  const addressOnly = current.input.metadata?.routingMode === 'address-only';
+  $('weight-status').textContent = addressOnly ? 'Переезды не учтены. Веса расстояния и времени пути отключены. Стабильность влияет только при перепланировании.' : 'Показан план с применёнными весами. Стабильность влияет только при перепланировании.';
+  for (const key of ['distance', 'travel']) $(`weight-${key}`).disabled = addressOnly;
+  for (const id of ['event-lat', 'event-lon']) { $(id).disabled = addressOnly; $(id).required = !addressOnly; }
+  $('objective').innerHTML = `<p>Взвешенная оценка: ${current.objective.value.toFixed(3)}. Среди проверенных планов сначала сравнивается число назначенных заявок, затем оценка (меньше — лучше).</p><table><thead><tr><th>Критерий</th><th>Значение</th><th>Вес</th><th>Вклад</th></tr></thead><tbody>${Object.keys(labels).map(key => `<tr><td>${labels[key]}</td><td>${current.objective.features[key].toFixed(3)}</td><td>${current.options.weights[key]}</td><td>${current.objective.contributions[key].toFixed(3)}</td></tr>`).join('')}</tbody></table><p>Расстояние — десятки км; путь и ожидание — часы; загрузка — сумма квадратов долей смен. Срочные заявки имеют преимущество при перепланировании.</p>`;
+  $('metrics').innerHTML = metric('Назначено заявок', `${m.assignedRequests} / ${m.totalRequests}`) + metric('Исполнителей в плане', m.usedEngineers) + metric('Общий пробег, км', m.totalDistanceKm ?? 'Не рассчитан') + metric('Не назначены', m.unassignedRequests);
   $('plan-label').textContent = current.event ? `После события в ${current.event.time}` : 'Исходный план';
   const rows = [['Базовый', comparison.baseline.metrics], ['Эвристики', comparison.optimized.metrics]];
   $('comparison').innerHTML = `<div class="table-scroll"><table><thead><tr><th>Исходный день</th><th>Назначено</th><th>Исполнителей</th><th>Км</th></tr></thead><tbody>${rows.map(([name, x]) => `<tr><td>${name}</td><td>${x.assignedRequests}</td><td>${x.usedEngineers}</td><td>${x.totalDistanceKm}</td></tr>`).join('')}</tbody></table></div>${current.event ? '<p class="small">Сравнение выше относится к исходному набору без новых срочных заявок. Актуальные показатели — в верхних карточках.</p>' : ''}`;
-  $('routes').innerHTML = current.routes.map((route, i) => `<div class="route-title" style="color:${colors[i % colors.length]}">${escape(route.engineerName)} · ${escape(route.transport)} · ${route.distanceKm} км</div><p class="small">${escape(route.explanation)}</p>${route.stops.length ? route.stops.map((s, index) => `<details><summary>${index + 1}. ${escape(s.requestId)} &nbsp; ${s.start}–${s.end} ${s.locked ? '<span class="pill">Зафиксировано</span>' : ''}</summary><p class="small">Прибытие ${s.arrival} · путь ${s.travelMinutes} мин · ожидание ${s.waitingMinutes} мин · ${s.distanceKm.toFixed(2)} км от предыдущей точки</p>${s.explanation.map(text => `<p class="explanation">${escape(text)}</p>`).join('')}</details>`).join('') : '<p class="small">Нет назначений</p>'}`).join('');
+  $('routes').innerHTML = current.routes.map((route, i) => `<div class="route-title" style="color:${colors[i % colors.length]}">${escape(route.engineerName)} · ${escape(route.transport)} · ${route.distanceKm == null ? 'пробег не рассчитан' : `${route.distanceKm} км`}</div><p class="small">${escape(route.explanation)}</p>${route.stops.length ? route.stops.map((s, index) => `<details><summary>${index + 1}. ${escape(s.requestId)} &nbsp; ${s.start}–${s.end} ${s.locked ? '<span class="pill">Зафиксировано</span>' : ''}</summary><p>${escape(s.address || '')}</p><p class="small">${addressOnly ? 'Без учёта времени в пути' : `Прибытие ${s.arrival} · путь ${s.travelMinutes} мин · ${s.distanceKm.toFixed(2)} км от предыдущей точки`} · ожидание ${s.waitingMinutes} мин</p>${s.explanation.map(text => `<p class="explanation">${escape(text)}</p>`).join('')}</details>`).join('') : '<p class="small">Нет назначений</p>'}`).join('');
+  $('comparison').innerHTML = $('comparison').innerHTML.replaceAll('<td>null</td>', '<td>—</td>');
   $('unassigned').innerHTML = current.unassigned.length ? current.unassigned.map(u => `<div class="issue"><strong>${escape(u.requestId)}</strong> — ${escape(u.reason.text)}</div>`).join('') : '<p class="muted">Все заявки назначены.</p>';
   $('changes-panel').hidden = !current.event;
   const describe = a => !a ? 'не было в плане' : a.status !== 'assigned' ? 'не назначена' : `${a.engineerId}, позиция ${a.position + 1}, начало ${a.start}`;

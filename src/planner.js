@@ -7,7 +7,7 @@ export const DEFAULT_WEIGHTS = Object.freeze({
 });
 const SPEEDS = { 'Автомобиль': 30, 'Пешеход': 5, 'Велосипед': 15, 'Общественный транспорт': 18 };
 const EPS = 1e-9;
-const clone = value => JSON.parse(JSON.stringify(value));
+const clone = value => value === undefined ? null : JSON.parse(JSON.stringify(value));
 const sum = values => values.reduce((a, b) => a + b, 0);
 const round = value => Math.round(value * 100) / 100;
 
@@ -28,20 +28,22 @@ function point(value, label) {
 }
 export function validateData(data) {
   check(data && Array.isArray(data.requests) && Array.isArray(data.engineers), 'Нужны массивы requests и engineers.');
+  check(data.metadata?.routingMode == null || ['geographic', 'address-only'].includes(data.metadata.routingMode), 'Неизвестный режим маршрутизации.');
+  const addressOnly = data.metadata?.routingMode === 'address-only';
   for (const [type, items] of Object.entries({ requests: data.requests, engineers: data.engineers })) {
     const ids = new Set();
     for (const item of items) {
       check(item && typeof item.id === 'string' && item.id.trim() && !ids.has(item.id), `${type}: ID должны быть непустыми уникальными строками.`);
       ids.add(item.id);
       if (type === 'requests') {
-        point(item.location, `Заявка ${item.id}`);
+        if (!addressOnly) point(item.location, `Заявка ${item.id}`);
         check(Number.isInteger(item.durationMinutes) && item.durationMinutes > 0, `${item.id}: длительность — положительное целое число минут.`);
         check(parseTime(item.windowStart) <= parseTime(item.windowEnd), `${item.id}: конец окна раньше начала.`);
         check(SKILLS.includes(item.requiredSkill), `${item.id}: неизвестный навык.`);
         check(item.requiredTransport == null || TRANSPORTS.includes(item.requiredTransport), `${item.id}: неизвестный тип транспорта.`);
         check(['Обычная', 'Срочная'].includes(item.priority), `${item.id}: неизвестный приоритет.`);
       } else {
-        point(item.startLocation, `Инженер ${item.id}`);
+        if (!addressOnly) point(item.startLocation, `Инженер ${item.id}`);
         check(parseTime(item.shiftStart) < parseTime(item.shiftEnd), `${item.id}: смена должна заканчиваться позже начала в тот же день.`);
         check(Array.isArray(item.skills) && item.skills.length >= 1 && item.skills.length <= 3 &&
           new Set(item.skills).size === item.skills.length && item.skills.every(s => SKILLS.includes(s)), `${item.id}: нужны от 1 до 3 различных навыков из справочника.`);
@@ -72,6 +74,7 @@ function context(data, options = {}, frozen = Object.create(null), now = 0, oldA
   return { data, weights, roadFactor, speeds, frozen, now, oldAssignments,
     requests: new Map(data.requests.map(r => [r.id, r])),
     leg(a, b, engineer) {
+      if (data.metadata?.routingMode === 'address-only') return { distanceKm: 0, travelMinutes: 0 };
       const distanceKm = haversineKm(a, b) * roadFactor;
       return { distanceKm, travelMinutes: Math.ceil(distanceKm / speeds[engineer.transport] * 60) };
     },
@@ -199,6 +202,7 @@ function reason(ctx, state, request) {
   return { code: 'NO_CAPACITY', text: 'В выбранном плане подходящие инженеры заняты: вставка заявки нарушает окно начала или конец смены. Другое распределение может дать иной результат.' };
 }
 function finish(ctx, state, algorithm, alternatives = []) {
+  const addressOnly = ctx.data.metadata?.routingMode === 'address-only';
   const assignments = Object.create(null);
   const routes = state.routes.map((route, i) => {
     const engineer = ctx.data.engineers[i];
@@ -217,15 +221,16 @@ function finish(ctx, state, algorithm, alternatives = []) {
       if (decision && !stop.locked && algorithm !== 'baseline') {
         explanation.push(`Проверено инженеров: ${decision.feasibleEngineers}. Изменение оценки при вставке: ${round(decision.insertionScoreDelta)}; вклад числа исполнителей ${round(decision.contributions.personnel)}, расстояния ${round(decision.contributions.distance)}, времени пути ${round(decision.contributions.travel)}. Меньшая оценка предпочтительнее.`);
       }
-      return { ...stop, decision: stop.locked ? stop.decision : decision, location: clone(request.location),
+      return { ...stop, distanceKm: addressOnly ? null : stop.distanceKm,
+        address: request.address ?? '', decision: stop.locked ? stop.decision : decision, location: addressOnly ? null : clone(request.location),
         arrival: formatTime(stop.arrivalMinute), start: formatTime(stop.startMinute), end: formatTime(stop.endMinute), explanation };
     });
     const distanceKm = sum(route.stops.map(s => s.distanceKm));
     return { engineerId: engineer.id, engineerName: engineer.name || engineer.id, transport: engineer.transport,
-      startLocation: clone(engineer.startLocation), stops, distanceKm: round(distanceKm),
+      startLocation: addressOnly ? null : clone(engineer.startLocation), stops, distanceKm: addressOnly ? null : round(distanceKm),
       travelMinutes: sum(stops.map(s => s.travelMinutes)),
-      geometry: [clone(engineer.startLocation), ...stops.map(s => s.location)],
-      explanation: `Порядок проверен с учётом пути, ожидания, длительности работ и смены. Возврат на базу не требуется. ${algorithm === 'baseline' ? 'Использован порядок назначения.' : 'Сравнивались допустимые позиции вставки и несколько порядков обработки заявок.'}` };
+      geometry: addressOnly ? [] : [clone(engineer.startLocation), ...stops.map(s => s.location)],
+      explanation: `${addressOnly ? 'Расписание без учёта переездов; выполнимость с реальным временем пути не проверена.' : 'Порядок проверен с учётом пути, ожидания, длительности работ и смены. Возврат на базу не требуется.'} ${algorithm === 'baseline' ? 'Использован порядок назначения.' : 'Сравнивались допустимые позиции вставки и несколько порядков обработки заявок.'}` };
   });
   const unassigned = ctx.data.requests.filter(r => !assignments[r.id]).map(r => {
     const why = reason(ctx, state, r);
@@ -238,11 +243,11 @@ function finish(ctx, state, algorithm, alternatives = []) {
     routes, assignments, unassigned, alternatives,
     metrics: { totalRequests: ctx.data.requests.length, assignedRequests: ctx.data.requests.length - unassigned.length,
       unassignedRequests: unassigned.length, usedEngineers: routes.filter(r => r.stops.length).length,
-      totalDistanceKm: round(sum(state.routes.flatMap(r => r.stops.map(s => s.distanceKm)))),
-      totalTravelMinutes: sum(routes.map(r => r.travelMinutes)),
+      totalDistanceKm: addressOnly ? null : round(sum(state.routes.flatMap(r => r.stops.map(s => s.distanceKm)))),
+      totalTravelMinutes: addressOnly ? null : sum(routes.map(r => r.travelMinutes)),
       distanceByEngineer: Object.fromEntries(routes.map(r => [r.engineerId, r.distanceKm])) },
     objective, assumptions: ['Время в пределах одного дня; окно ограничивает начало, а не окончание работы.',
-      'Расстояние оценено по координатам с коэффициентом пути; дорожная сеть, пробки и расписания транспорта не учитываются.',
+      addressOnly ? 'Режим без координат: переезды не учтены в расписании, расстояния неизвестны. Веса расстояния и времени пути не влияют на результат.' : 'Расстояние оценено по координатам с коэффициентом пути; дорожная сеть, пробки и расписания транспорта не учитываются.',
       'Время пути округлено вверх до минуты. Возврат на базу не требуется.',
       'Эвристика не гарантирует глобальный оптимум. При перепланировании сначала сравнивается число срочных, затем общее число назначенных заявок.'],
   };
@@ -278,7 +283,7 @@ export function comparePlans(data, options = {}) {
   return { baseline, optimized, delta: {
     assignedRequests: optimized.metrics.assignedRequests - baseline.metrics.assignedRequests,
     usedEngineers: optimized.metrics.usedEngineers - baseline.metrics.usedEngineers,
-    totalDistanceKm: round(optimized.metrics.totalDistanceKm - baseline.metrics.totalDistanceKm),
+    totalDistanceKm: data.metadata?.routingMode === 'address-only' ? null : round(optimized.metrics.totalDistanceKm - baseline.metrics.totalDistanceKm),
   } };
 }
 
